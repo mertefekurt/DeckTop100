@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import json
 
 URL = "https://store.steampowered.com/charts/steamdecktopplayed"
+OUTPUT_FILE = "steamdeck_top.json"
+PREVIEW_LIMIT = 10
 
 
 def get_class_map(page):
@@ -18,7 +20,9 @@ def get_class_map(page):
                 fn(e, e.exports, {});
                 const exp = e.exports;
                 if (exp && exp.ChartTable && exp.Rank && exp.Game) return exp;
-            } catch (err) {}
+            } catch (err) {
+                // Ignore webpack modules that are not chart style exports.
+            }
         }
         return null;
     })();
@@ -73,31 +77,33 @@ def main():
     """Fetch Steam Deck chart data and write it to steamdeck_top.json."""
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-        print("🔗 Steam Deck Top Played sayfası yükleniyor...")
-        page.goto(URL, wait_until="networkidle")
+        try:
+            page = browser.new_page()
+            print("🔗 Steam Deck Top Played sayfası yükleniyor...")
+            page.goto(URL, wait_until="networkidle")
 
-        print("🧩 CSS class map alınıyor...")
-        class_map = get_class_map(page)
-        if not class_map:
-            raise RuntimeError("Class map bulunamadı! (webpackChunkstore yapısı değişmiş olabilir)")
+            print("🧩 CSS class map alınıyor...")
+            class_map = get_class_map(page)
+            if not class_map:
+                raise RuntimeError("Class map bulunamadı! (webpackChunkstore yapısı değişmiş olabilir)")
 
-        print("✅ Class map bulundu:")
-        print(json.dumps(class_map, indent=2))
+            print("✅ Class map bulundu:")
+            print(json.dumps(class_map, indent=2))
 
-        html = page.content()
-        browser.close()
+            html = page.content()
+        finally:
+            browser.close()
 
     print("📊 Tablo parse ediliyor...")
     data = parse_table(html, class_map)
 
     print(f"\n🎮 Top {len(data)} oyun:")
-    for row in data[:10]:
+    for row in data[:PREVIEW_LIMIT]:
         print(f"{row['rank']}. {row['name']}  |  {row['price']}  |  {row['change']}")
 
-    with open("steamdeck_top.json", "w", encoding="utf-8") as f:
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    print("\n💾 Sonuç 'steamdeck_top.json' dosyasına kaydedildi.")
+    print(f"\n💾 Sonuç '{OUTPUT_FILE}' dosyasına kaydedildi.")
 
 if __name__ == "__main__":
     main()

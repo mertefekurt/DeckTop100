@@ -1,13 +1,20 @@
 export const refreshFrequency = 1000 * 60 * 60; // refresh interval
 export const command = "cat /Users/YourUser/Documents/Projects/DeckTop100/steamdeck_top.json";
 
+const EMPTY_STATE = "Loading...";
+const JSON_ERROR = "⚠️ JSON can't read.";
+
+/**
+ * Render the Übersicht widget from the Steam Deck chart JSON payload.
+ */
 export const render = ({ output }) => {
-  if (!output) return <div> Loading...</div>;
+  if (!output) return <div>{EMPTY_STATE}</div>;
+
   let games;
   try {
     games = JSON.parse(output);
   } catch {
-    return <div>⚠️ JSON can't read.</div>;
+    return <div>{JSON_ERROR}</div>;
   }
 
   return (
