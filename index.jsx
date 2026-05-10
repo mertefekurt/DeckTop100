@@ -41,10 +41,10 @@ export const render = ({ output }) => {
           paddingRight: "6px",
         }}
       >
-        {games.map((g, i) => (
+        {games.map((g) => (
           <a
             href={g.url}
-            key={i}
+            key={g.url || `${g.rank}-${g.name}`}
             style={{
               display: "flex",
               alignItems: "center",

@@ -1,10 +1,12 @@
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 import json
-import re
 
 URL = "https://store.steampowered.com/charts/steamdecktopplayed"
+
+
 def get_class_map(page):
+    """Extract Steam's runtime CSS class map from webpack modules."""
     js_code = """
     (() => {
         const chunks = window.webpackChunkstore;
@@ -23,7 +25,9 @@ def get_class_map(page):
     """
     return page.evaluate(js_code)
 
+
 def parse_table(html, class_map):
+    """Parse Steam Deck chart rows into serializable game dictionaries."""
     soup = BeautifulSoup(html, "html.parser")
     table = soup.find("table", class_=class_map["ChartTable"])
     if not table:
@@ -64,7 +68,9 @@ def parse_table(html, class_map):
         })
     return games
 
+
 def main():
+    """Fetch Steam Deck chart data and write it to steamdeck_top.json."""
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
