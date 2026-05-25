@@ -1,6 +1,6 @@
 # 🎮 Steam Deck Top 100 Widget for macOS
 
-Display the **most played games on Steam Deck** live on your macOS desktop!  
+Display the **most played games on Steam Deck** live on your macOS desktop!
 
 This project fetches data from Steam's [Top Played on Deck](https://store.steampowered.com/charts/steamdecktopplayed) page and displays it as an **Übersicht** widget.
 
@@ -10,27 +10,27 @@ This project fetches data from Steam's [Top Played on Deck](https://store.steamp
 
 ## ✨ Features
 
-- 🧩 Real-time Steam Deck Top 100 list  
+- 🧩 Real-time Steam Deck Top 100 list
 
-- 🎨 Modern design with game names, prices, and cover art  
+- 🎨 Modern design with game names, prices, and cover art
 
-- 🖱️ Scrollable full list  
+- 🖱️ Scrollable full list
 
-- 🌈 Blur effect transparent interface  
+- 🌈 Blur effect transparent interface
 
-- ⚙️ Auto-refresh (every hour)  
+- ⚙️ Auto-refresh (every hour)
 
 ---
 
 ## 🧰 Requirements
 
-- macOS Monterey or later  
+- macOS Monterey or later
 
-- [Übersicht](https://tracesof.net/uebersicht/) installed  
+- [Übersicht](https://tracesof.net/uebersicht/) installed
 
-- [Homebrew](https://brew.sh/) (recommended for Python)  
+- [Homebrew](https://brew.sh/) (recommended for Python)
 
-- Python 3.10+  
+- Python 3.10+
 
 ---
 
@@ -57,7 +57,7 @@ pip install playwright beautifulsoup4
 playwright install
 ```
 
-🔹 This step downloads Playwright (for browser automation)  
+🔹 This step downloads Playwright (for browser automation)
 🔹 `beautifulsoup4` is for HTML parsing operations
 
 ---
