@@ -3,6 +3,8 @@ export const command = "cat /Users/YourUser/Documents/Projects/DeckTop100/steamd
 
 const EMPTY_STATE = "Loading...";
 const JSON_ERROR = "⚠️ JSON can't read.";
+const EMPTY_LIST = "No games found.";
+
 const widgetStyle = {
   fontFamily: "SF Pro Display",
   color: "white",
@@ -66,6 +68,10 @@ export const render = ({ output }) => {
     return <div>{JSON_ERROR}</div>;
   }
 
+  if (!Array.isArray(games) || games.length === 0) {
+    return <div>{EMPTY_LIST}</div>;
+  }
+
   return (
     <div style={widgetStyle}>
       <h2 style={titleStyle}>
@@ -73,10 +79,10 @@ export const render = ({ output }) => {
       </h2>
 
       <div style={listStyle}>
-        {games.map((g) => (
+        {games.map((game) => (
           <a
-            href={g.url}
-            key={g.url || `${g.rank}-${g.name}`}
+            href={game.url}
+            key={game.url || `${game.rank}-${game.name}`}
             style={itemStyle}
             onMouseEnter={(e) =>
               (e.currentTarget.style.background = "rgba(255,255,255,0.1)")
@@ -86,16 +92,16 @@ export const render = ({ output }) => {
             }
           >
             <img
-              src={g.image}
-              alt={g.name}
+              src={game.image}
+              alt={game.name}
               style={imageStyle}
             />
             <div style={{ flexGrow: 1, overflow: "hidden" }}>
               <div style={nameStyle}>
-                {g.rank}. {g.name}
+                {game.rank}. {game.name}
               </div>
               <div style={priceStyle}>
-                {g.price}
+                {game.price}
               </div>
             </div>
           </a>

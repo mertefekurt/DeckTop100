@@ -104,8 +104,8 @@ def main():
     for row in data[:PREVIEW_LIMIT]:
         print(f"{row['rank']}. {row['name']}  |  {row['price']}  |  {row['change']}")
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as output:
+        json.dump(data, output, ensure_ascii=False, indent=2)
     print(f"\n💾 Sonuç '{OUTPUT_FILE}' dosyasına kaydedildi.")
 
 

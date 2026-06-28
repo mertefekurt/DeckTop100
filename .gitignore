@@ -31,7 +31,6 @@ venv.bak/
 *.swp
 *.swo
 *~
-.DS_Store
 steamdeck_top.json
 .playwright/
 *.log
@@ -42,4 +41,3 @@ steamdeck_top.json
 .Trashes
 ehthumbs.db
 Thumbs.db
-
