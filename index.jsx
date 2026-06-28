@@ -3,6 +3,55 @@ export const command = "cat /Users/YourUser/Documents/Projects/DeckTop100/steamd
 
 const EMPTY_STATE = "Loading...";
 const JSON_ERROR = "⚠️ JSON can't read.";
+const widgetStyle = {
+  fontFamily: "SF Pro Display",
+  color: "white",
+  padding: "14px",
+  width: "420px",
+  height: "600px",
+  background: "rgba(0,0,0,0.35)",
+  borderRadius: "16px",
+  backdropFilter: "blur(10px)",
+  overflow: "hidden",
+};
+const titleStyle = {
+  margin: "0 0 12px 0",
+  fontSize: "18px",
+  fontWeight: 600,
+};
+const listStyle = {
+  overflowY: "scroll",
+  maxHeight: "540px",
+  paddingRight: "6px",
+};
+const itemStyle = {
+  display: "flex",
+  alignItems: "center",
+  marginBottom: "8px",
+  textDecoration: "none",
+  color: "white",
+  padding: "6px",
+  borderRadius: "10px",
+  transition: "background 0.2s",
+};
+const imageStyle = {
+  width: "72px",
+  height: "28px",
+  borderRadius: "6px",
+  marginRight: "10px",
+  objectFit: "cover",
+};
+const nameStyle = {
+  fontWeight: 500,
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+};
+const priceStyle = {
+  fontSize: "12px",
+  opacity: 0.8,
+  marginTop: "2px",
+};
 
 /**
  * Render the Übersicht widget from the Steam Deck chart JSON payload.
@@ -18,50 +67,17 @@ export const render = ({ output }) => {
   }
 
   return (
-    <div
-      style={{
-        fontFamily: "SF Pro Display",
-        color: "white",
-        padding: "14px",
-        width: "420px",
-        height: "600px",
-        background: "rgba(0,0,0,0.35)",
-        borderRadius: "16px",
-        backdropFilter: "blur(10px)",
-        overflow: "hidden",
-      }}
-    >
-      <h2
-        style={{
-          margin: "0 0 12px 0",
-          fontSize: "18px",
-          fontWeight: 600,
-        }}
-      >
+    <div style={widgetStyle}>
+      <h2 style={titleStyle}>
         🎮 Steam Deck Top 100
       </h2>
 
-      <div
-        style={{
-          overflowY: "scroll",
-          maxHeight: "540px",
-          paddingRight: "6px",
-        }}
-      >
+      <div style={listStyle}>
         {games.map((g) => (
           <a
             href={g.url}
             key={g.url || `${g.rank}-${g.name}`}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "8px",
-              textDecoration: "none",
-              color: "white",
-              padding: "6px",
-              borderRadius: "10px",
-              transition: "background 0.2s",
-            }}
+            style={itemStyle}
             onMouseEnter={(e) =>
               (e.currentTarget.style.background = "rgba(255,255,255,0.1)")
             }
@@ -72,32 +88,13 @@ export const render = ({ output }) => {
             <img
               src={g.image}
               alt={g.name}
-              style={{
-                width: "72px",
-                height: "28px",
-                borderRadius: "6px",
-                marginRight: "10px",
-                objectFit: "cover",
-              }}
+              style={imageStyle}
             />
             <div style={{ flexGrow: 1, overflow: "hidden" }}>
-              <div
-                style={{
-                  fontWeight: 500,
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
+              <div style={nameStyle}>
                 {g.rank}. {g.name}
               </div>
-              <div
-                style={{
-                  fontSize: "12px",
-                  opacity: 0.8,
-                  marginTop: "2px",
-                }}
-              >
+              <div style={priceStyle}>
                 {g.price}
               </div>
             </div>

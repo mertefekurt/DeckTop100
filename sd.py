@@ -1,33 +1,34 @@
-from playwright.sync_api import sync_playwright
-from bs4 import BeautifulSoup
 import json
+
+from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 
 URL = "https://store.steampowered.com/charts/steamdecktopplayed"
 OUTPUT_FILE = "steamdeck_top.json"
 PREVIEW_LIMIT = 10
+CLASS_MAP_SCRIPT = """
+(() => {
+    const chunks = window.webpackChunkstore;
+    if (!chunks) return null;
+    const modules = chunks.flatMap(c => (c[1] ? Object.entries(c[1]) : []));
+    for (const [id, fn] of modules) {
+        const e = { exports: {} };
+        try {
+            fn(e, e.exports, {});
+            const exp = e.exports;
+            if (exp && exp.ChartTable && exp.Rank && exp.Game) return exp;
+        } catch (err) {
+            // Ignore webpack modules that are not chart style exports.
+        }
+    }
+    return null;
+})();
+"""
 
 
 def get_class_map(page):
     """Extract Steam's runtime CSS class map from webpack modules."""
-    js_code = """
-    (() => {
-        const chunks = window.webpackChunkstore;
-        if (!chunks) return null;
-        const modules = chunks.flatMap(c => (c[1] ? Object.entries(c[1]) : []));
-        for (const [id, fn] of modules) {
-            const e = { exports: {} };
-            try {
-                fn(e, e.exports, {});
-                const exp = e.exports;
-                if (exp && exp.ChartTable && exp.Rank && exp.Game) return exp;
-            } catch (err) {
-                // Ignore webpack modules that are not chart style exports.
-            }
-        }
-        return null;
-    })();
-    """
-    return page.evaluate(js_code)
+    return page.evaluate(CLASS_MAP_SCRIPT)
 
 
 def parse_table(html, class_map):
@@ -62,14 +63,16 @@ def parse_table(html, class_map):
                 if img_tag and img_tag.get("src"):
                     img = img_tag["src"]
 
-        games.append({
-            "rank": rank,
-            "name": name,
-            "price": price,
-            "change": change,
-            "url": link,
-            "image": img
-        })
+        games.append(
+            {
+                "rank": rank,
+                "name": name,
+                "price": price,
+                "change": change,
+                "url": link,
+                "image": img,
+            }
+        )
     return games
 
 
@@ -104,6 +107,7 @@ def main():
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     print(f"\n💾 Sonuç '{OUTPUT_FILE}' dosyasına kaydedildi.")
+
 
 if __name__ == "__main__":
     main()
